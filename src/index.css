@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors → these auto-generate utilities like bg-navy-900, text-gold */
+  --color-navy-900: #060d20;
+  --color-navy-800: #0a1530;
+  --color-navy-700: #0f1f45;
+  --color-gold: #ffd166;
+  --color-gold-deep: #f4a836;
+  --color-festive-red: #ef476f;
+  --color-festive-green: #06d6a0;
+
+  /* Custom animation → generates the animate-twinkle utility */
+  --animate-twinkle: twinkle 2.4s ease-in-out infinite;
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-navy-900 text-slate-100 antialiased;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+}
