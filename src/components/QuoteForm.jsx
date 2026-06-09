@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PACKAGES } from '../data/siteContent'
+import { submitQuote } from '../lib/api'
 import Button from './ui/Button'
 
 const BLANK = { name: '', email: '', phone: '', address: '', pkg: 'classic', feet: '', message: '' }
@@ -10,7 +11,9 @@ const LABEL = 'text-[13px] font-semibold text-slate-400'
 
 export default function QuoteForm() {
   const [form, setForm] = useState(BLANK)
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState('idle') // idle | sending | done | error
+  const [error, setError] = useState('')
+  const [saved, setSaved] = useState(null) // the lead the server returned
 
   const update = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -18,35 +21,45 @@ export default function QuoteForm() {
   const feet = Number(form.feet) || 0
   const estimate = rate * feet
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const lead = { ...form, estimate, submittedAt: new Date().toISOString() }
-    // 👉 CRM HOOK — replace with a real API call to your backend/CRM:
-    // fetch('http://localhost:4000/api/quote', { method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) })
-    console.log('New lead 👉', lead)
-    setSubmitted(true)
+    setStatus('sending')
+    setError('')
+    try {
+      // The server recalculates the estimate itself, so we just send the inputs.
+      const lead = await submitQuote(form)
+      setSaved(lead)
+      setStatus('done')
+    } catch (err) {
+      setError(err.message)
+      setStatus('error')
+    }
   }
 
-  if (submitted) {
+  const reset = () => { setForm(BLANK); setSaved(null); setStatus('idle'); setError('') }
+
+  if (status === 'done') {
+    const finalEstimate = saved?.estimate ?? estimate
     return (
       <section id="quote" className="py-[90px]">
         <div className="mx-auto max-w-[540px] px-6 text-center">
           <div className="mx-auto mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#06d6a0,#04b88a)] text-4xl font-extrabold text-[#04211a] shadow-[0_0_30px_rgba(6,214,160,0.5)]">
             ✓
           </div>
-          <h2 className="mb-2.5 text-[28px] font-bold">Thank you, {form.name.split(' ')[0] || 'friend'}!</h2>
+          <h2 className="mb-2.5 text-[28px] font-bold">Thank you, {(saved?.name || form.name).split(' ')[0] || 'friend'}!</h2>
           <p className="mb-6 text-slate-400">
             Your request is in. A lighting specialist will contact you within 24 hours
-            {estimate > 0 ? ` about your ~$${estimate.toLocaleString()} estimate` : ''}.
+            {finalEstimate > 0 ? ` about your ~$${finalEstimate.toLocaleString()} estimate` : ''}.
           </p>
-          <Button as="button" variant="gold" onClick={() => { setForm(BLANK); setSubmitted(false) }}>
+          <Button as="button" variant="gold" onClick={reset}>
             Submit Another Request
           </Button>
         </div>
       </section>
     )
   }
+
+  const sending = status === 'sending'
 
   return (
     <section id="quote" className="py-[90px]">
@@ -111,7 +124,15 @@ export default function QuoteForm() {
             <textarea name="message" rows="3" value={form.message} onChange={update} placeholder="Tell us about your vision..." className={`${FIELD} resize-y`} />
           </div>
 
-          <Button as="button" type="submit" variant="gold" full>Request My Free Quote →</Button>
+          {status === 'error' && (
+            <p className="rounded-[10px] border border-festive-red/40 bg-festive-red/10 px-3.5 py-3 text-sm text-festive-red" role="alert">
+              {error}
+            </p>
+          )}
+
+          <Button as="button" type="submit" variant="gold" full disabled={sending} className={sending ? 'pointer-events-none opacity-70' : ''}>
+            {sending ? 'Sending…' : 'Request My Free Quote →'}
+          </Button>
         </form>
       </div>
     </section>
