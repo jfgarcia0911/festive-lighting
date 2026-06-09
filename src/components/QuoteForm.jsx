@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PACKAGES } from '../data/siteContent'
 import { submitQuote } from '../lib/api'
+import RooflineMap from './RooflineMap'
 import Button from './ui/Button'
 
 const BLANK = { name: '', email: '', phone: '', address: '', pkg: 'classic', feet: '', message: '' }
@@ -16,6 +17,10 @@ export default function QuoteForm() {
   const [saved, setSaved] = useState(null) // the lead the server returned
 
   const update = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+
+  // Fed by the map: the traced roofline length and the geocoded address.
+  const handleMeasure = (ft) => setForm((f) => ({ ...f, feet: ft ? String(ft) : '' }))
+  const handleAddress = (addr) => setForm((f) => ({ ...f, address: addr }))
 
   const rate = PACKAGES[form.pkg].rate
   const feet = Number(form.feet) || 0
@@ -63,7 +68,12 @@ export default function QuoteForm() {
 
   return (
     <section id="quote" className="py-[90px]">
-      <div className="mx-auto grid max-w-[1140px] grid-cols-1 items-start gap-12 px-6 lg:grid-cols-2">
+      {/* map-based roofline measurer — feeds feet + address into the form */}
+      <div className="mx-auto max-w-[1140px] px-6">
+        <RooflineMap onMeasure={handleMeasure} onAddress={handleAddress} />
+      </div>
+
+      <div className="mx-auto mt-12 grid max-w-[1140px] grid-cols-1 items-start gap-12 px-6 lg:grid-cols-2">
         {/* intro + live estimate */}
         <div>
           <p className="font-semibold tracking-wide text-gold">Get Started</p>
@@ -114,7 +124,7 @@ export default function QuoteForm() {
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className={LABEL}>Roofline (feet)</label>
+              <label className={LABEL}>Roofline (feet) <span className="font-normal text-slate-500">· from map, editable</span></label>
               <input type="number" name="feet" min="0" value={form.feet} onChange={update} placeholder="120" className={FIELD} />
             </div>
           </div>
