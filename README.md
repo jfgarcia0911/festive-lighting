@@ -90,6 +90,17 @@ To point the frontend at a deployed API, copy `.env.example` to `.env` and set
 | GET    | `/api/quotes` | List all captured leads  |
 | GET    | `/api/health` | Health check             |
 
+## 🌐 Deployment
+
+The frontend deploys to **Vercel** (static SPA) and the API to **Render** (Node web service):
+
+- **Frontend (Vercel):** auto-detected Vite build. Set `VITE_API_URL` to the
+  deployed API origin. `vercel.json` rewrites all routes to `index.html` so
+  `/admin` works on a direct visit or refresh.
+- **API (Render):** deploy the `server/` folder — a `render.yaml` blueprint is
+  included. Set `CLIENT_ORIGIN` to the deployed frontend URL (comma-separated
+  to allow more than one).
+
 ## 🗺️ Roadmap
 
 - [x] Admin dashboard to view submissions
@@ -100,4 +111,4 @@ To point the frontend at a deployed API, copy `.env.example` to `.env` and set
 
 ## 👤 Author
 
-`<Your Name>` — Full-Stack Developer
+John Garcia — Full-Stack Developer
