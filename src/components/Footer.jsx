@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const COLS = [
   { title: 'Services', links: [['#services', 'Holiday Lighting'], ['#services', 'Permanent Lighting'], ['#services', 'Commercial']] },
   { title: 'Company', links: [['#gallery', 'Gallery'], ['#process', 'How It Works'], ['#quote', 'Get a Quote']] },
@@ -27,7 +29,10 @@ export default function Footer() {
       </div>
       <div className="mx-auto mt-12 flex max-w-[1140px] flex-wrap justify-between gap-3 border-t border-white/10 px-6 py-[22px] text-sm text-slate-400">
         <span>© 2026 Festive Lighting Pros. All rights reserved.</span>
-        <span>Built with React ⚛️ + Tailwind 🎨</span>
+        <span className="flex items-center gap-4">
+          <Link to="/admin" className="transition hover:text-gold">Admin Dashboard</Link>
+          <span>Built with React ⚛️ + Tailwind 🎨</span>
+        </span>
       </div>
     </footer>
   )
