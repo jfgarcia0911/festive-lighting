@@ -1,6 +1,9 @@
 // Single place that knows how to talk to the backend.
-// Override the base URL in production with a VITE_API_URL env var.
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+// - Local dev: defaults to the Express server on :4000.
+// - Production: set VITE_API_URL to the deployed API origin (e.g. Vercel +
+//   Render split). Leave it empty to call a same-origin /api (single-service
+//   deploy where one server hosts both the site and the API).
+const API_URL = import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? '' : 'http://localhost:4000')
 
 // POST a new quote request. Returns the saved lead (with the server-side
 // recalculated estimate) or throws an Error with a user-friendly message.

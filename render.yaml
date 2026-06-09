@@ -1,0 +1,16 @@
+# Render Blueprint — deploys the Express API in server/ as a free web service.
+# In Render: New + → Blueprint → pick this repo. After it deploys, set the
+# CLIENT_ORIGIN env var to your Vercel URL (it's marked sync:false below so it
+# isn't baked into the repo).
+services:
+  - type: web
+    name: festive-lighting-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node src/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: CLIENT_ORIGIN
+        sync: false

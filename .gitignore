@@ -24,3 +24,6 @@ server/data/leads.json
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# Local agent / assistant config
+.claude
