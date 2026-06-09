@@ -28,7 +28,7 @@ Built as a portfolio project to demonstrate a modern **React + Node.js** stack.
 |-----------|---------------------------------------|
 | Frontend  | React, Vite, Tailwind CSS v4          |
 | Backend   | Node.js, Express                      |
-| Storage   | JSON file (swappable for a database)  |
+| Storage   | Supabase (Postgres), JSON-file fallback |
 
 ## 📂 Project Structure
 
@@ -43,11 +43,12 @@ festive-lighting/
 │   ├── App.jsx               # Router
 │   └── index.css             # Tailwind import + theme
 ├── server/                   # Node.js + Express API
+│   ├── db/schema.sql         # Supabase/Postgres table + seed data
 │   └── src/
 │       ├── routes/           # Route definitions
 │       ├── controllers/      # Request handlers
 │       ├── middleware/       # Request validation
-│       ├── lib/              # Lead storage
+│       ├── lib/              # Lead store (Supabase or JSON) + mailer
 │       ├── app.js            # Express app setup
 │       └── index.js          # Server entry point
 └── README.md
@@ -106,7 +107,7 @@ The frontend deploys to **Vercel** (static SPA) and the API to **Render** (Node 
 - [x] Admin dashboard to view submissions
 - [x] Map-based roofline measurement (draw the roof, auto-calculate feet)
 - [x] Email notification on new lead (via Resend)
-- [ ] Persist leads in a real database (PostgreSQL / MongoDB)
+- [x] Persist leads in a real database (Supabase / Postgres)
 - [ ] Forward leads to a CRM (HubSpot / GoHighLevel) via webhook
 
 ## 👤 Author

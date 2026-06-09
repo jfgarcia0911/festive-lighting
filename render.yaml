@@ -14,6 +14,11 @@ services:
     envVars:
       - key: CLIENT_ORIGIN
         sync: false
+      # Persistent storage via Supabase — leave unset to use the JSON-file fallback.
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
       # Optional email notifications via Resend — leave unset to skip emails.
       - key: RESEND_API_KEY
         sync: false
