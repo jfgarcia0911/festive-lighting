@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { SEED_LEADS } from './seed.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = join(__dirname, '..', '..', 'data')
@@ -11,7 +12,9 @@ async function readAll() {
   try {
     return JSON.parse(await readFile(DB_FILE, 'utf-8'))
   } catch (err) {
-    if (err.code === 'ENOENT') return [] // no file yet → start empty
+    // No file yet (e.g. a fresh deploy) → show sample leads so the dashboard
+    // isn't empty. The first real submission persists everything to disk.
+    if (err.code === 'ENOENT') return SEED_LEADS.map((lead) => ({ ...lead }))
     throw err
   }
 }
