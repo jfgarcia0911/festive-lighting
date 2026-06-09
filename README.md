@@ -104,10 +104,10 @@ The frontend deploys to **Vercel** (static SPA) and the API to **Render** (Node 
 ## 🗺️ Roadmap
 
 - [x] Admin dashboard to view submissions
-- [ ] Map-based roofline measurement (draw the roof, auto-calculate feet)
+- [x] Map-based roofline measurement (draw the roof, auto-calculate feet)
+- [x] Email notification on new lead (via Resend)
 - [ ] Persist leads in a real database (PostgreSQL / MongoDB)
 - [ ] Forward leads to a CRM (HubSpot / GoHighLevel) via webhook
-- [ ] Email notification on new lead
 
 ## 👤 Author
 

@@ -1,4 +1,5 @@
 import { saveLead, getLeads } from '../lib/leadStore.js'
+import { sendLeadNotification } from '../lib/mailer.js'
 
 const RATES = { classic: 12, premium: 18, permanent: 30, commercial: 0 }
 
@@ -15,14 +16,14 @@ export async function createQuote(req, res) {
     receivedAt: new Date().toISOString(),
   })
 
-  // 👉 CRM HOOK — forward the lead to a real CRM here:
-  // await fetch(process.env.CRM_WEBHOOK_URL, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(saved),
-  // })
-
   console.log('📥 New lead saved:', saved.id, '-', saved.name)
+
+  // Email the team — best-effort: never block or fail the request on email.
+  // (A real CRM webhook could be forwarded here the same way.)
+  sendLeadNotification(saved).catch((err) =>
+    console.error('✉️  Email notification failed:', err.message)
+  )
+
   res.status(201).json({ message: 'Quote request received', lead: saved })
 }
 

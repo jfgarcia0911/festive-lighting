@@ -14,3 +14,8 @@ services:
     envVars:
       - key: CLIENT_ORIGIN
         sync: false
+      # Optional email notifications via Resend — leave unset to skip emails.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: NOTIFY_EMAIL
+        sync: false
